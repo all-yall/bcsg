@@ -1,0 +1,14 @@
+name: bcsg
+version: 0.1.0
+
+authors:
+  - FunkyQChicken <spencergrobinson@gmail.com>
+
+crystal: 0.24.1
+
+license: MIT
+
+dependencies:
+  crsfml:
+    github: oprypin/crsfml
+
