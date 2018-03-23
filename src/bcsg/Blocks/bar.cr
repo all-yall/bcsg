@@ -1,14 +1,14 @@
 
 class Bar < Block
-   @@default_style = SF::Texture.from_file(get_resource("box_template.png"))
-   def initialize(strings, bools, name, parent = nil, properties = nil)
+  @@default_style = Bar.get_bar_resource("bar_template")
+  def initialize(strings, bools, name, parent = nil, properties = nil)
     super
     @style = @@default_style
     @scale = 4
     if !@properties.nil?
       prop = @properties.as(XML::Node)
       if prop["style"]?
-        @style = SF::Texture.from_file(prop["style"])
+        @style = Bar.get_bar_resource(prop["style"])
       end
       if prop["scale"]?
         @scale = prop["scale"].to_i
@@ -16,4 +16,18 @@ class Bar < Block
     end
   end
 
+  def draw
+    start = @style[0].size[0]
+    fin   = @width - @style[2].size[0]
+    img = SF::Sprite.new()
+    (0.. start - fin).each do |x|
+
+    end
+  end
+
+  def self.get_bar_resource(name : String) : Array(SF::Texture)
+    ["left", "center", "right"].map do |str|
+      next SF::Texture.from_file(self.get_resource(name + "/" + str + ".png"))
+    end
+  end
 end
