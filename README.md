@@ -1,6 +1,9 @@
 # bcsg
+CAUTION: STILL UNDER HEAVY DEVELOPEMENT
 
-TODO: Write a description here
+this is a gui library for crsfml, it is part of a game i am making  
+so while i will try to design it to be relativley easy to use it may  
+not be as robust or efficient as you may want.  
 
 ## Installation
 
