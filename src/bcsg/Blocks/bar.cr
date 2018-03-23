@@ -19,8 +19,9 @@ class Bar < Block
   def draw
     start = @style[0].size[0]
     fin   = @width - @style[2].size[0]
-    img = SF::Sprite.new()
-    (0.. start - fin).each do |x|
+    edge  = @style[1].size[0]
+    img = SF::Sprite.new(@style[1])
+    (0.. (start - fin ) / ).each do |x|
 
     end
   end
