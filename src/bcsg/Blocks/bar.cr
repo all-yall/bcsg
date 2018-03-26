@@ -16,19 +16,31 @@ class Bar < Block
     end
   end
 
-  def draw
-    start = @style[0].size[0]
-    fin   = @width - @style[2].size[0]
-    edge  = @style[1].size[0]
+  def draw(window : SF::Window)
+    start = @style[0].size[0] * @scale 
+    fin   = @width - (@style[2].size[0] * @scale)
+    edge  = @style[1].size[0] * @scale 
     img = SF::Sprite.new(@style[1])
-    (0.. (start - fin ) / ).each do |x|
-
+    img.scale = {@scale, @scale}
+    (0..((fin - start) / edge) + 1).each do |x|
+        img.position = {@x + (x * edge), y}
+        window.draw img
     end
+
+    img = SF::Sprite.new(@style[0])
+    img.scale = {@scale, @scale}
+    img.position = {@x, @y}
+    window.draw img 
+
+    img = SF::Sprite.new(@style[1])
+    img.scale = {@scale, @scale}
+    img.position = {fin + @x, @y}
+    window.draw img 
   end
 
   def self.get_bar_resource(name : String) : Array(SF::Texture)
     ["left", "center", "right"].map do |str|
-      next SF::Texture.from_file(self.get_resource(name + "/" + str + ".png"))
+      SF::Texture.from_file(self.get_resource(name + "/" + str + ".png"))
     end
   end
 end
