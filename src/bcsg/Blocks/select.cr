@@ -15,6 +15,7 @@ class Select < Block
     @left_button  = Button.new  temp, @buttons, "left",  nil
     @right_button = Button.new  temp, @buttons, "right", nil
     @label        = Text.new    temp, @buttons, "label", nil
+    @bar          = Bar.new     temp, @buttons, "bar",   nil 
 
     @left_button.handle = "0,0"
     @left_button.dims   = "0,0,100o,100"
@@ -28,14 +29,17 @@ class Select < Block
     @label.dims   = "50,50,50,90"
     @label.handle = "50,50"
 
+    @bar.parent = self 
+    @bar.dims   = "50,100,50,10"
+    @bar.handle = "50,0"
+
     @children << @label
     @children << @left_button
     @children << @right_button
+    @children << @bar    
 
     @label.content = @options[@index]
     @label.update_text
-
-
   end
 
   def mouse_click(x,y)
