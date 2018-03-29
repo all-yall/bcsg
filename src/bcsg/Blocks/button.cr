@@ -3,10 +3,15 @@ class Button < Block
 
   @bools : Hash(String,Bool)
 
+  @style_normal : Array(SF::Texture)
+  @style_pressed : Array(SF::Texture)
+
   def initialize(strings, bools, name, parent = nil, properties = nil)
     super
     @bools = bools
     @bools[@name] = false
+    @style_normal  = Block.get_style("button_template/normal")
+    @style_pressed = Block.get_style("button_template/pressed")
   end
 
   def get_bool
@@ -14,13 +19,7 @@ class Button < Block
   end
 
   def draw(window : SF::Window)
-    rect = SF::RectangleShape.new
-    rect.size = {@width, @height}
-    rect.position = {@x, @y}
-    rect.outline_color = SF::Color::Red
-    rect.fill_color = @clicked ? SF::Color::Black : SF::Color::White
-    rect.outline_thickness = 3
-    window.draw rect
+    draw_panel(window, @clicked ? @style_pressed : @style_normal)
     super
   end
 
@@ -30,7 +29,6 @@ class Button < Block
     @bools[@name] = true
     return true
   end
-
 
   def mouse_release()
     @clicked = false
