@@ -1,6 +1,6 @@
 
 class Text < Block
-  @@font = SF::Font.from_file("./recources/font.ttf")
+  @@font = SF::Font.from_file(Block.get_resource("font.ttf"))
   property content : String
 
   def initialize(strings, bools, name, parent = nil, properties = nil)
