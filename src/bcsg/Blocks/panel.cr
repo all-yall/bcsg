@@ -1,7 +1,7 @@
 
 class Panel < Block
-  property style : SF::Texture
-  @@default_style = SF::Texture.from_file(get_resource("window_template.png"))
+  property style : Array(SF::Texture)
+  @@default_style = Block.get_style("panel")
 
   def initialize(strings, bools, name, parent = nil, properties = nil)
       super
@@ -10,7 +10,7 @@ class Panel < Block
       if !@properties.nil?
         prop = @properties.as(XML::Node)
         if prop["style"]?
-          @style = SF::Texture.from_file(prop["style"])
+                @style = Block.get_style(prop["style"])
         end
         if prop["scale"]?
           @scale = prop["scale"].to_i
@@ -19,7 +19,7 @@ class Panel < Block
   end
 
   def draw(window : SF::Window)
-    draw_panel(window, @style, @scale)
+    draw_panel(window, @style)
     super
   end
 end

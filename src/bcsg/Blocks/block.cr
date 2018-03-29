@@ -108,68 +108,135 @@ class Block
   end
 
   def self.get_resource(recource : String)
-    "./recources/" + recource
+    "./resources/" + recource
   end
 
-  def draw_panel(window : SF::Window, style : SF::Texture, scale : Number)
-    edge = style.size[0] / 3
-    length = edge * scale
-    sprite = SF::Sprite.new(style)
-    sprite.scale = {scale.to_f, scale.to_f}
+  def draw_panel(window : SF::Window, textures : Array(SF::Texture))
+    
+    style = textures.map {|texture| SF::Sprite.new(texture)}
 
-    # center fill
-    sprite.texture_rect = SF.int_rect(edge,edge,edge,edge)
-    (1...(@width/length)).each do |x|
-      (1...(@height/length)).each do |y|
-        sprite.position = {@x + x * length, @y + y * length}
-        window.draw sprite
-      end
+    get_height = -> (sprite : SF::Sprite) do
+        (sprite.texture.as(SF::Texture).size[1]).to_i
     end
 
-    # upper edge
-    sprite.texture_rect = SF.int_rect(edge,0,edge,edge)
-    (1...(@width/length)).each do |x|
-      sprite.position = {@x + x * length, @y}
-      window.draw sprite
+    get_width = -> (sprite : SF::Sprite) do
+        (sprite.texture.as(SF::Texture).size[0]).to_i
     end
+    
+    set_bounds = -> (sprite : SF::Sprite, x : Int32, y : Int32, width : Int32, height : Int32) do 
+       sprite.position = {x, y}
+       sprite.texture_rect = SF.int_rect(0, 0, width , height ) 
+       width > 0 && height > 0
+    end 
 
-    # lower edge
-    sprite.texture_rect = SF.int_rect(edge,edge*2,edge,edge)
-    (1...(@width/length)).each do |x|
-      sprite.position = {@x + x * length, @y + @height - length}
-      window.draw sprite
+    # center
+    sprite = style[4]
+    if set_bounds.call(sprite,
+        @x + get_width.call(style[3]),
+        @y + get_height.call(style[1]),
+        @width  - get_width.call(style[5]) - get_width.call(style[3]),
+        @height - get_height.call(style[7]) - get_height.call(style[1]))
+    window.draw sprite
     end
 
     # left edge
-    sprite.texture_rect = SF.int_rect(0,edge,edge,edge)
-    (1...(@height/length)).each do |y|
-      sprite.position = {@x, @y + y * length}
-      window.draw sprite
-    end
+    sprite = style[3]
+    if set_bounds.call(sprite,
+        @x,
+        @y + get_height.call(style[0]),
+        get_width.call(sprite),
+        (@height - get_height.call(style[0]) - get_height.call(style[6])))
+    window.draw sprite
+    end 
+
+    # upper edge
+    sprite = style[1]
+    if set_bounds.call(sprite,
+        @x + get_width.call(style[0]),
+        @y,
+        @width - get_width.call(style[2]) - get_width.call(style[0]),
+        get_height.call(sprite))
+    window.draw sprite
+    end 
+
+    # lower edge
+    sprite = style[7]
+    if set_bounds.call(sprite,
+        @x + get_width.call(style[0]),
+        @y + @height - get_height.call(sprite),
+        @width - get_width.call(style[2]) - get_width.call(style[0]),
+        get_height.call(sprite))
+    window.draw sprite
+    end 
 
     # right edge
-    sprite.texture_rect = SF.int_rect(edge*2,edge,edge,edge)
-    (1...(@height/length)).each do |y|
-      sprite.position = {@x + @width - length, @y + y * length}
-      window.draw sprite
+    sprite = style[5]
+    if set_bounds.call(sprite,
+        @x + @width - get_width.call(sprite),
+        @y + get_height.call(style[2]),
+        get_width.call(sprite),
+        @height - get_height.call(style[2]) - get_height.call(style[8]))
+    window.draw sprite
+    end 
+    
+    # top left corner
+    sprite = style[0]
+    if set_bounds.call(sprite,
+        @x,
+        @y,
+        get_width.call(sprite),
+        get_height.call(sprite))
+        window.draw sprite 
     end
+    
+    # top right corner
+    sprite = style[2]
+    if set_bounds.call(sprite,
+        @x + @width - get_width.call(sprite),
+        @y,
+        get_width.call(sprite),
+        get_height.call(sprite))
+        window.draw sprite 
+    end
+    
+    # bottom left corner
+    sprite = style[6]
+    if set_bounds.call(sprite,
+        @x,
+        @y + @height - get_height.call(sprite),
+        get_width.call(sprite),
+        get_height.call(sprite))
+        window.draw sprite 
+    end
+    
+    # bottom right corner
+    sprite = style[8]
+    if set_bounds.call(sprite,
+        @x + @width - get_width.call(sprite),
+        @y + @height - get_height.call(sprite),
+        get_width.call(sprite),
+        get_height.call(sprite))
+        window.draw sprite 
+    end
+  end
 
-    #corners
-    sprite.texture_rect = SF.int_rect(0,0,edge,edge)
-    sprite.position = {@x, @y}
-    window.draw sprite
+  def self.get_style(filename) : Array(SF::Texture)
+    resource = get_resource(filename) + "/"
+    ["tl_corner", "t_edge", "tr_corner",
+     "l_edge",    "center", "r_edge",
+     "bl_corner", "b_edge", "br_corner"].map do |part|
+       texture = SF::Texture.from_file(resource + part + ".png")
+       texture.repeated = true 
+       texture 
+     end
+  end
 
-    sprite.texture_rect = SF.int_rect(edge*2,0,edge,edge)
-    sprite.position = {@x + @width - length, @y}
-    window.draw sprite
-
-    sprite.texture_rect = SF.int_rect(0,edge*2,edge,edge)
-    sprite.position = {@x, @y + @height - length}
-    window.draw sprite
-
-    sprite.texture_rect = SF.int_rect(edge * 2, edge * 2,edge,edge)
-    sprite.position = {@x + @width - length, @y + @height - length}
-    window.draw sprite
+  # booleans are to scale the texture
+  # with respect to their dimension
+  # true for both isn't suggested
+  # as it will stretch or squeeze the texture.
+  def draw_sprite(text : Texture, width : Boolean, height : Boolean)
+    w_scale = -1
   end
 
   def to_s
