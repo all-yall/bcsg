@@ -26,6 +26,7 @@ class GUI
     @file = XML.parse(File.open(name + ".xml"))
     @window_size = @window.size
     @block_types = @@default_block_types.dup
+    @textures = {} of String => SF::Texture
   end
 
   def key_input(key : String, down : Bool)
@@ -58,14 +59,6 @@ class GUI
     node_type = node["type"]?
     the_class = (node_type.nil? ? Block : @block_types[node_type])
     block = the_class.new(@strings, @bools, node.name, parent_block, node)
-
-    #give it any of the extra properties in the node if they exist
-    if node["dims"]?
-      block.dims = node["dims"]
-    end
-    if node["handle"]?
-      block.handle = node["handle"]
-    end
 
     # give it a spot in the blocks hash and return
     @blocks[block.name] = block
