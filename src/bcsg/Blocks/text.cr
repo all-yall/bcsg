@@ -4,18 +4,18 @@ class Text < Block
   property content : String
 
   def initialize(strings, bools, name, parent = nil, properties = nil)
-    super
     @content = "hello world!"
     @text = SF::Text.new("", @@font)
-    update_text
-  end
-
-  def draw(window : SF::Window)
-    @text.position = {@x, @y}
-    @text.color = SF::Color::Red
-    window.draw @text
     super
   end
+
+  def get_sprites
+    @text.position = {@x, @y}
+    @text.color = SF::Color::Red
+    ret = super 
+    ret << @text 
+    return ret
+  end 
 
   def update_text
     @text = SF::Text.new(@content, @@font)
@@ -50,6 +50,7 @@ class Text < Block
 
     end
   end
+  
   def update_size
     update_text
     super

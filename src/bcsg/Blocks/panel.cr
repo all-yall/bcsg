@@ -17,9 +17,8 @@ class Panel < Block
         end
       end
   end
-
-  def draw(window : SF::Window)
-    draw_panel(window, @style)
-    super
+    
+  def get_sprites
+    get_panel(@style)
   end
 end

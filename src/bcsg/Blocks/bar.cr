@@ -14,23 +14,26 @@ class Bar < Block
     end
   end
 
-  def draw(window : SF::Window)
+  def get_sprites 
+    ret = [] of SF::Drawable
     start = @style[0].size[0] + @x 
     fin   = @width - (@style[2].size[0]) + @x
     
     img = SF::Sprite.new(@style[1])
     img.position = {start, @y}
     img.texture_rect = SF.int_rect(0, 0, fin - start, img.global_bounds.height.to_i)
-    window.draw img
+    ret << img
 
     img = SF::Sprite.new(@style[0])
     img.position = {@x, @y}
-    window.draw img 
+    ret << img
 
     img = SF::Sprite.new(@style[2])
     img.position = {fin, @y}
-    window.draw img 
-  end
+    ret << img
+    
+    return ret
+  end 
 
   def self.get_bar_resource(name : String) : Array(SF::Texture)
     ["left", "center", "right"].map do |str|

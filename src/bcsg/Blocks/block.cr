@@ -10,7 +10,8 @@ class Block
   handle : String,
   properties : XML::Node | Nil,
   gui : GUI | Nil
-
+    
+  @sprites : Array(SF::Drawable)
 
   def initialize(strings, bools, @name, @parent = nil, @properties = nil)
     @gui = @parent.as(Block).gui if !@parent.nil?
@@ -20,6 +21,12 @@ class Block
     @y = 0
     @width = 100
     @height = 100
+    if !@properties.nil? 
+      prop = @properties.as(XML::Node)
+      @dims = prop["dims"] if prop["dims"]?
+      @handle = prop["handle"] if prop["handle"]?
+    end
+    @sprites = [] of SF::Drawable
     set_size
     @children = [] of Block
   end
@@ -32,10 +39,16 @@ class Block
 
   def update_size
     set_size
+    @sprites = get_sprites
     children.each do |child|
       child.update_size
     end
   end
+
+  # get an array of te sprites that will be displayed
+  def get_sprites : Array(SF::Drawable)
+    [] of SF::Drawable
+  end 
 
   def set_size
     if !@parent.nil?
@@ -94,7 +107,8 @@ class Block
   end
 
   def draw(window : SF::Window)
-    children.each do |child| child.draw window end
+    @sprites.each do |sprite| window.draw sprite end 
+    children.each do |child|  child.draw window  end
   end
 
   # for debugging purposes
@@ -111,8 +125,8 @@ class Block
     "./resources/" + recource
   end
 
-  def draw_panel(window : SF::Window, textures : Array(SF::Texture))
-    
+  def get_panel(textures : Array(SF::Texture))
+    ret = [] of SF::Drawable
     style = textures.map {|texture| SF::Sprite.new(texture)}
 
     get_height = -> (sprite : SF::Sprite) do
@@ -136,7 +150,7 @@ class Block
         @y + get_height.call(style[1]),
         @width  - get_width.call(style[5]) - get_width.call(style[3]),
         @height - get_height.call(style[7]) - get_height.call(style[1]))
-    window.draw sprite
+    ret << sprite
     end
 
     # left edge
@@ -146,7 +160,7 @@ class Block
         @y + get_height.call(style[0]),
         get_width.call(sprite),
         (@height - get_height.call(style[0]) - get_height.call(style[6])))
-    window.draw sprite
+    ret << sprite
     end 
 
     # upper edge
@@ -156,7 +170,7 @@ class Block
         @y,
         @width - get_width.call(style[2]) - get_width.call(style[0]),
         get_height.call(sprite))
-    window.draw sprite
+    ret << sprite
     end 
 
     # lower edge
@@ -166,7 +180,7 @@ class Block
         @y + @height - get_height.call(sprite),
         @width - get_width.call(style[2]) - get_width.call(style[0]),
         get_height.call(sprite))
-    window.draw sprite
+    ret << sprite
     end 
 
     # right edge
@@ -176,7 +190,7 @@ class Block
         @y + get_height.call(style[2]),
         get_width.call(sprite),
         @height - get_height.call(style[2]) - get_height.call(style[8]))
-    window.draw sprite
+    ret << sprite
     end 
     
     # top left corner
@@ -186,7 +200,7 @@ class Block
         @y,
         get_width.call(sprite),
         get_height.call(sprite))
-        window.draw sprite 
+    ret << sprite 
     end
     
     # top right corner
@@ -196,7 +210,7 @@ class Block
         @y,
         get_width.call(sprite),
         get_height.call(sprite))
-        window.draw sprite 
+    ret << sprite 
     end
     
     # bottom left corner
@@ -206,7 +220,7 @@ class Block
         @y + @height - get_height.call(sprite),
         get_width.call(sprite),
         get_height.call(sprite))
-        window.draw sprite 
+    ret << sprite 
     end
     
     # bottom right corner
@@ -216,8 +230,10 @@ class Block
         @y + @height - get_height.call(sprite),
         get_width.call(sprite),
         get_height.call(sprite))
-        window.draw sprite 
+    ret << sprite 
     end
+
+    return ret
   end
 
   def self.get_style(filename) : Array(SF::Texture)
@@ -235,10 +251,23 @@ class Block
   # with respect to their dimension
   # true for both isn't suggested
   # as it will stretch or squeeze the texture.
-  def draw_sprite(text : Texture, width : Boolean, height : Boolean)
-    w_scale = -1
+  def get_sprite(text : SF::Texture, width : Bool, height : Bool)
+    w_scale = @width.to_f  / text.size[0]
+    h_scale = @height.to_f / text.size[1]
+    sprite = SF::Sprite.new(text)
+    sprite.scale = if width && height
+                     {w_scale, h_scale}
+                   elsif width 
+                     {w_scale, w_scale}
+                   elsif height 
+                     {h_scale, h_scale}
+                   else 
+                     {1, 1} 
+                   end 
+    sprite.position = {@x,@y}
+    return sprite
   end
-
+  
   def to_s
     to_s("")
   end

@@ -12,8 +12,8 @@ class Select < Block
     @buttons = {} of String => Bool
     temp  = {} of String => String
 
-    @left_button  = Button.new  temp, @buttons, "left",  nil
-    @right_button = Button.new  temp, @buttons, "right", nil
+    @left_button  = Button_Icon.new  temp, @buttons, "left",  nil
+    @right_button = Button_Icon.new  temp, @buttons, "right", nil
     @label        = Text.new    temp, @buttons, "label", nil
     @bar          = Bar.new     temp, @buttons, "bar",   nil 
 
