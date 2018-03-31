@@ -20,10 +20,12 @@ class Select < Block
     @left_button.handle = "0,0"
     @left_button.dims   = "0,0,100o,100"
     @left_button.parent = self
+    @left_button.set_textures("selector/left")
 
     @right_button.handle = "100,0"
     @right_button.dims   = "100,0,100o,100"
     @right_button.parent = self
+    @right_button.set_textures("selector/right")
 
     @label.parent = self
     @label.dims   = "50,50,50,90"
