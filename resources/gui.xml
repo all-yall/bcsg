@@ -1,7 +1,7 @@
 
-
-<selector dims = "50,50,30,70" type = "panel">
-    <preview dims = "50,20,20,20o" type = "animation"/>
+<full dims = "50,50,100,100" type = "panel">
+<selector dims = "50,50,50,90" type = "panel">
+    <preview dims = "50,20,20,20o" type = "panel"/>
     <container dims = "50,65,70,50">
         <primary   dims = "50,10,80,10" type = "selector"/>
         <color     dims = "50,30,80,10" type = "selector"/>
@@ -9,3 +9,4 @@
         <start     dims = "50,80,50,10" type = "button"/>
     </container>
 </selector>
+</full>
