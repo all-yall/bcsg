@@ -11,19 +11,19 @@ class GUI
   @root : Block | Nil
   @window_size : SF::Vector2(Int32)
   @@default_block_types = {
-              "panel"     => Panel,
-              "button"    => Button,
-              "block"     => Block,
-              "selector"  => Select,
-              "text"      => Text,
-              "animation" => Animation
+              "panel"       => Panel,
+              "button"      => Button,
+              "block"       => Block,
+              "selector"    => Select,
+              "text"        => Text,
+              "button_icon" => Button_Icon 
             }
 
-  def initialize(@window : SF::RenderWindow, name)
+  def initialize(@window : SF::RenderWindow, name : String)
     @strings = {} of String => String
     @bools   = {} of String => Bool
     @blocks  = {} of String => Block
-    @file = XML.parse(File.open(name + ".xml"))
+    @file = XML.parse(File.open(get_resource(name + ".xml")))
     @window_size = @window.size
     @block_types = @@default_block_types.dup
     @textures = {} of String => SF::Texture
@@ -98,7 +98,7 @@ class GUI
   private def get(node : XML::Node, parent_block : Block | Nil)
     # make the block
     node_type = node["type"]?
-    the_class = (node_type.nil? ? Block : @block_types[node_type])
+      the_class = (node_type.nil? ? Block : @block_types[node_type].downcase.strip)
     block = the_class.new(@strings, @bools, node.name, parent_block, node)
 
     # give it a spot in the blocks hash and return
