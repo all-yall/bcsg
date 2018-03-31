@@ -11,6 +11,11 @@ class Button_Icon < Button
     @sprites_pressed = [get_sprite(@textures_pressed[0], true, false)] of SF::Drawable   
     @sprites_normal  = [get_sprite(@textures_normal[0], true, false)] of SF::Drawable 
   end
+  
+  def set_textures(path : String)
+    @textures_pressed = [get_gui.get_texture(path + "/pressed.png")] 
+    @textures_normal  = [get_gui.get_texture(path + "/normal.png")]
+  end 
 
   def get_sprites 
     @sprites_pressed[0] = get_sprite(@textures_pressed[0], true, false)   

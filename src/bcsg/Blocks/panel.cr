@@ -9,11 +9,15 @@ class Panel < Block
       if !@properties.nil?
         prop = @properties.as(XML::Node)
         if prop["style"]?
-          @textures = get_panel_textures(prop["style"])
+          set_textures(prop["style"])
         end
       end
   end
-    
+  
+  def set_textures(path : String)
+    @textures = get_panel_textures(path)
+  end  
+
   def get_sprites
     get_panel_sprites(@textures)
   end
