@@ -13,11 +13,16 @@ class Button < Block
     super
     @bools = bools
     @bools[@name] = false
-    @textures_normal  = get_panel_textures("button_template/normal")
-    @textures_pressed = get_panel_textures("button_template/pressed")
+    @textures_normal  = get_panel_textures("button/normal")
+    @textures_pressed = get_panel_textures("button/pressed")
     @sprites_pressed  = get_panel_sprites(@textures_pressed)   
     @sprites_normal   = get_panel_sprites(@textures_normal)   
   end
+  
+  def set_textures
+    @textures_normal  = get_panel_textures(path + "/normal")
+    @textures_pressed = get_panel_textures(path + "/pressed")
+  end 
 
   def get_bool
     @bools[@name]
