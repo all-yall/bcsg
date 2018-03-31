@@ -1,24 +1,20 @@
 
 class Panel < Block
-  property style : Array(SF::Texture)
-  @@default_style = Block.get_style("panel")
+  
+  @textures : Array(SF::Texture)
 
-  def initialize(strings, bools, name, parent = nil, properties = nil)
+  def initialize(strings, bools, name, parent = nil, properties = nil, gui = nil)
       super
-      @style = @@default_style
-      @scale = 4
+      @textures = get_panel_textures("panel")
       if !@properties.nil?
         prop = @properties.as(XML::Node)
         if prop["style"]?
-                @style = Block.get_style(prop["style"])
-        end
-        if prop["scale"]?
-          @scale = prop["scale"].to_i
+          @textures = get_panel_textures(prop["style"])
         end
       end
   end
     
   def get_sprites
-    get_panel(@style)
+    get_panel_sprites(@textures)
   end
 end

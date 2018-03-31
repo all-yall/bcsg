@@ -1,24 +1,28 @@
 
 class Text < Block
-  @@font = SF::Font.from_file(Block.get_resource("font.ttf"))
   property content : String
+  
+  @font : SF::Font
+  @color : SF::Color
 
-  def initialize(strings, bools, name, parent = nil, properties = nil)
-    @content = "hello world!"
-    @text = SF::Text.new("", @@font)
+  def initialize(strings, bools, name, parent = nil, properties = nil, gui = nil)
     super
+    @font  = get_gui.get_font("font.ttf")
+    @color = SF::Color::Black 
+    @content = "hello world!"
+    @text = SF::Text.new("", @font)
   end
 
   def get_sprites
     @text.position = {@x, @y}
-    @text.color = SF::Color::Red
+    @text.color = @color
     ret = super 
     ret << @text 
     return ret
   end 
 
   def update_text
-    @text = SF::Text.new(@content, @@font)
+    @text = SF::Text.new(@content, @font)
   end
 
   def set_size

@@ -2,7 +2,7 @@
 class Select < Block
   @strings : Hash(String,String)
 
-  def initialize(strings, bools, name, parent = nil, properties = nil)
+  def initialize(strings, bools, name, parent = nil, properties = nil, gui = nil)
     super
     @strings = strings
     @strings[@name] = ""
@@ -12,10 +12,10 @@ class Select < Block
     @buttons = {} of String => Bool
     temp  = {} of String => String
 
-    @left_button  = Button_Icon.new  temp, @buttons, "left",  nil
-    @right_button = Button_Icon.new  temp, @buttons, "right", nil
-    @label        = Text.new    temp, @buttons, "label", nil
-    @bar          = Bar.new     temp, @buttons, "bar",   nil 
+    @left_button  = Button_Icon.new  temp, @buttons, "left",  nil, nil, get_gui 
+    @right_button = Button_Icon.new  temp, @buttons, "right", nil, nil, get_gui  
+    @label        = Text.new         temp, @buttons, "label", nil, nil, get_gui 
+    @bar          = Bar.new          temp, @buttons, "bar",   nil, nil, get_gui
 
     @left_button.handle = "0,0"
     @left_button.dims   = "0,0,100o,100"

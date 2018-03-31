@@ -13,7 +13,7 @@ class Block
     
   @sprites : Array(SF::Drawable)
 
-  def initialize(strings, bools, @name, @parent = nil, @properties = nil)
+  def initialize(strings, bools, @name, @parent = nil, @properties = nil, @gui = nil)
     @gui = @parent.as(Block).gui if !@parent.nil?
     @dims = "50,50,100,100"
     @handle = "50,50"
@@ -121,11 +121,7 @@ class Block
     window.draw rect
   end
 
-  def self.get_resource(recource : String)
-    "./resources/" + recource
-  end
-
-  def get_panel(textures : Array(SF::Texture))
+  def get_panel_sprites(textures : Array(SF::Texture))
     ret = [] of SF::Drawable
     style = textures.map {|texture| SF::Sprite.new(texture)}
 
@@ -236,12 +232,14 @@ class Block
     return ret
   end
 
-  def self.get_style(filename) : Array(SF::Texture)
-    resource = get_resource(filename) + "/"
+  # given the path to a style file relative to the resource
+  # folder, this will return an array of the textures contained
+  # in it
+  def get_panel_textures(filename : String) : Array(SF::Texture)
     ["tl_corner", "t_edge", "tr_corner",
      "l_edge",    "center", "r_edge",
      "bl_corner", "b_edge", "br_corner"].map do |part|
-       texture = SF::Texture.from_file(resource + part + ".png")
+       texture = get_gui.get_texture(filename + "/" + part + ".png")
        texture.repeated = true 
        texture 
      end
@@ -267,7 +265,12 @@ class Block
     sprite.position = {@x,@y}
     return sprite
   end
-  
+
+  # convenience function to save keystrokes
+  def get_gui 
+    @gui.as(GUI)
+  end 
+
   def to_s
     to_s("")
   end
