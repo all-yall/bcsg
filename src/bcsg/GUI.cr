@@ -98,7 +98,7 @@ class GUI
   private def get(node : XML::Node, parent_block : Block | Nil)
     # make the block
     node_type = node["type"]?
-      the_class = (node_type.nil? ? Block : @block_types[node_type].downcase.strip)
+      the_class = (node_type.nil? ? Block : @block_types[node_type.downcase.strip])
     block = the_class.new(@strings, @bools, node.name, parent_block, node)
 
     # give it a spot in the blocks hash and return
