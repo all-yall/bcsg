@@ -6,7 +6,7 @@
         <primary   dims = "50,10,80,10" type = "selector"/>
         <color     dims = "50,30,80,10" type = "selector"/>
         <secondary dims = "50,50,80,10" type = "selector"/>
-        <start     dims = "50,80,50,10" type = "button"/>
+        <start     dims = "50,80,50,10" type = "button_text"/>
     </container>
 </selector>
 </full>

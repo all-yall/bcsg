@@ -12,7 +12,7 @@ class Block
   gui : GUI | Nil
     
   @sprites : Array(SF::Drawable)
-
+  
   def initialize(strings, bools, @name, @parent = nil, @properties = nil, @gui = nil)
     @gui = @parent.as(Block).gui if !@parent.nil?
     @dims = "50,50,100,100"
@@ -106,10 +106,16 @@ class Block
     return ret
   end
 
+  # draws to the provided screen
   def draw(window : SF::Window)
     @sprites.each do |sprite| window.draw sprite end 
-    children.each do |child|  child.draw window  end
+    @children.each do |child|  child.draw window  end
   end
+  
+  # updates things
+  def tick 
+    @children.each do |child| child.tick end
+  end 
 
   # for debugging purposes
   def draw_rectangle

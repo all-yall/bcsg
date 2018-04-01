@@ -16,7 +16,8 @@ class GUI
               "block"       => Block,
               "selector"    => Select,
               "text"        => Text,
-              "button_icon" => Button_Icon 
+              "button_icon" => Button_Icon,
+              "button_text" => Button_Text 
             }
 
   def initialize(@window : SF::RenderWindow, name : String)
@@ -85,6 +86,26 @@ class GUI
       resize
     end
     @root.as(Block).draw @window
+  end
+ 
+  # update and return self or the next GUI 
+  def tick : GUI 
+    @root.as(Block).tick 
+    if should_close
+      return close 
+    end  
+    return self
+  end
+  
+  # should return true when the window should close
+  private def should_close : Bool 
+    return false
+  end
+ 
+  # do all closing actions and return next GUI 
+  # in implentation should not return self
+  private def close : GUI
+    return self
   end
 
   # add a new block type to the gui other than the defaults so
