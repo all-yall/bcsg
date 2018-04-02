@@ -3,10 +3,10 @@
 <selector dims = "50,50,50,90" type = "panel">
     <preview dims = "50,20,20,20o" type = "panel"/>
     <container dims = "50,65,70,50">
-        <primary   dims = "50,10,80,10" type = "selector"/>
-        <color     dims = "50,30,80,10" type = "selector"/>
-        <secondary dims = "50,50,80,10" type = "selector"/>
-        <start     dims = "50,80,50,10" type = "button_text"/>
+      <primary   dims = "50,10,80,10" type = "selector">one two three</primary>
+      <color     dims = "50,30,80,10" type = "selector"/>
+      <secondary dims = "50,50,80,10" type = "selector"/>
+      <start     dims = "50,80,50,10" type = "button_text"/>
     </container>
 </selector>
 </full>

@@ -35,7 +35,7 @@ class GUI
   # that takes key input. none do by default, so you probaby
   # can ignore this one.
   def key_input(key : String, down : Bool)
-    @root.as(Block).input(key, down)
+    @root.as(Block).key_input(key, down)
   end
 
   # call this when the mouse is clicked

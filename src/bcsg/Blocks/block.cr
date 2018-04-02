@@ -97,13 +97,10 @@ class Block
     (0 <= (y - @y) <= @height)
   end
 
-  def key_input(key, down) : Bool
-    ret = false
-    children.while do |child|
-      ret ||= child.key_input(key, down)
-      !ret
+  def key_input(key, down)
+    children.each do |child|
+      child.key_input(key, down)
     end
-    return ret
   end
 
   # draws to the provided screen
