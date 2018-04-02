@@ -11,6 +11,14 @@ class Select < Block
     @index = 0
     @buttons = {} of String => Bool
     temp  = {} of String => String
+    
+    if !@properties.nil?
+      prop = @properties.as(XML::Node)
+      con = prop.content.split(" ")
+      if con.size > 1
+        @options = con 
+      end
+    end
 
     @left_button  = Button_Icon.new  temp, @buttons, "left",  nil, nil, get_gui 
     @right_button = Button_Icon.new  temp, @buttons, "right", nil, nil, get_gui  
@@ -57,6 +65,7 @@ class Select < Block
     @index += @options.size
     @index %= @options.size
     @label.content = @options[@index]
+    @strings[@name] = @options[@index]
     @label.update_size
   end
 end
